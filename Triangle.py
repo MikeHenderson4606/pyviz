@@ -46,9 +46,6 @@ class Triangle(VObject):
         glDrawArrays(GL_TRIANGLES, 0, self.vertex_count)
         glBindVertexArray(0)
 
-    def createFunctionAnimation(self, func, lower_bound, upper_bound, steps, loop, draw=True):
-        return super().createFunctionAnimation(func, lower_bound, upper_bound, steps, loop, draw)
-
     def updatePosition(self, newPosition):
         return super().updatePosition(newPosition)
 

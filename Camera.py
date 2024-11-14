@@ -14,15 +14,13 @@ class Camera():
         self.updateVectors()
 
     def updateVectors(self):
-        self.forwards = np.array(
-            [
-                np.cos(np.deg2rad(self.theta)) * np.cos(np.deg2rad(self.phi)),
-                np.sin(np.deg2rad(self.theta)) * np.cos(np.deg2rad(self.phi)),
-                np.sin(np.deg2rad(self.phi))
-            ]
-        )
+        self.forwards = np.array([
+            np.sin(np.deg2rad(self.theta)),
+            np.sin(np.deg2rad(self.phi)),
+            -np.cos(np.deg2rad(self.theta))
+        ], dtype=np.float32)
 
-        globalUp = np.array([0, 1, 0], dtype=np.float32)
+        globalUp = np.array([0.0, 1.0, 0.0], dtype=np.float32)
         
         # Fundamental 3 directions
         self.right = np.cross(self.forwards, globalUp)          # Right vector
@@ -33,7 +31,7 @@ class Camera():
         # Ensure camera is looking down z axis
         view_matrix = pyrr.matrix44.create_look_at(
             eye = self.camera_eye,
-            target = self.camera_eye + self.camera_forwards,
+            target = self.camera_eye + self.forwards,
             up = self.up,
             dtype=np.float32
         )
@@ -51,11 +49,10 @@ class Camera():
         elif self.theta < 0:
             self.theta += 360
 
-        self.phi = min(
-            89, max(-89, self.phi + dPhi)
-        )
+        self.phi += dPhi
 
         self.updateVectors()
+        print(self.forwards)
 
     def getViewMatrix(self):
         return self._lookAt()

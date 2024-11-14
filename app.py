@@ -273,10 +273,17 @@ class App:
                     if (event.key == pg.K_a):
                         self.camera.moveCameraBy(np.array([-1.0, 0.0, 0.0], dtype=np.float32))
                     if (event.key == pg.K_w):
-                        #self.camera.moveCameraBy(np.array([0.0, 1.0, 0.0], dtype=np.float32))  
-                        self.camera.spinCamera(10, 0)
+                        self.camera.moveCameraBy(np.array([0.0, 1.0, 0.0], dtype=np.float32))  
                     if (event.key == pg.K_s):
                         self.camera.moveCameraBy(np.array([0.0, -1.0, 0.0], dtype=np.float32))
+                    if (event.key == pg.K_RIGHT):
+                        self.camera.spinCamera(10, 0)
+                    if (event.key == pg.K_LEFT):
+                        self.camera.spinCamera(-10, 0)
+                    if (event.key == pg.K_UP):
+                        self.camera.spinCamera(0, 10)
+                    if (event.key == pg.K_DOWN):
+                        self.camera.spinCamera(0, -10)
                 # Reinitialize matrices once a key press has happened
                 self.initMatrices()
 

@@ -27,23 +27,7 @@ class VObject(ABC):
     @abstractmethod
     def draw(self):
         pass
-
-    @abstractmethod
-    def createFunctionAnimation(self, func, lower_bound, upper_bound, steps, loop, draw):
-        discontinuity_threshold = 100
-        self.potential_discontinuities = []
-        self.doesLoop = loop
-        self.doesAnimate = True
-        self.steps = steps
-        self.drawFunc = draw
-
-        interval = (upper_bound - lower_bound) / steps
-        loopIndices = np.arange(start=lower_bound, stop=upper_bound, step=interval)
-        for i in loopIndices:
-            self.animation_steps.append([float(i), float(func(i)), 0.0])
-            if abs(func(i) - func(i - interval)) > discontinuity_threshold:
-                self.potential_discontinuities.append(i)
-                
+    
     @abstractmethod
     def updatePosition(self, newPosition):
         pass

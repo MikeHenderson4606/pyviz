@@ -81,9 +81,6 @@ class Circle(VObject):
             glDrawArrays(GL_TRIANGLE_FAN, 0, self.CIRCLE_QUALITY + 2)
         glBindVertexArray(0)
 
-    def createFunctionAnimation(self, func, lower_bound, upper_bound, steps, loop, draw=True):
-        return super().createFunctionAnimation(func, lower_bound, upper_bound, steps, loop, draw)
-
     def updatePosition(self, newPosition):
         self.center = newPosition
         self.createVertices()

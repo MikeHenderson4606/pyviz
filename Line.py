@@ -11,8 +11,15 @@ class Line(VObject):
     def __init__(self, start, end, z_index = 0, thickness = 1.0, color = (1.0, 1.0, 1.0)):
         super().__init__()
 
-        self.start = start                          # The starting position of the line (x, y, z) as a list
-        self.end = end                              # The ending position of the line (x, y, z) as a list
+        if (len(start) == 3):
+            self.start = start                      # The starting position of the line (x, y, z) as a list
+        else:
+            raise Exception("Start position must be a three dimensional vector")
+        if (len(end) == 3):
+            self.end = end                          # The ending position of the line (x, y, z) as a list
+        else:
+            raise Exception("End position must be a three dimentional vector")
+        
         self.thickness = thickness / 100            # Thickness of the line -- OpenGL depreciated line thickness past 1.0, so need to create a quad to visualize thicker lines
         self.color = color                          # Color
         self.z_index = z_index
@@ -31,16 +38,16 @@ class Line(VObject):
         # Introduce the thickness
         offset_x = -dy * self.thickness / 2.0   # Scaled perpendicular vector
         offset_y = dx * self.thickness / 2.0    # Scaled perpendicular vector
-        offset_z = dz * self.thickness / 2.0    # Scaled perpendicular vector
+        offset_z = dz * self.thickness / 2.0   # Scaled perpendicular vector
 
         normals_1 = [[self.start[0] + offset_x, self.start[1] + offset_y, self.start[2] + offset_z], [self.start[0] - offset_x, self.start[1] - offset_y, self.start[2] - offset_z]]
         normals_2 = [[self.end[0] + offset_x, self.end[1] + offset_y, self.end[2] + offset_z], [self.end[0] - offset_x, self.end[1] - offset_y, self.end[2] - offset_z]]
 
-        # Add color data      z    r    g    b
-        normals_1[0].extend([0.0, self.color[0], self.color[1], self.color[2]])
-        normals_1[1].extend([0.0, self.color[0], self.color[1], self.color[2]])
-        normals_2[0].extend([0.0, self.color[0], self.color[1], self.color[2]])
-        normals_2[1].extend([0.0, self.color[0], self.color[1], self.color[2]])
+        # Add color data      r            g                b
+        normals_1[0].extend([self.color[0], self.color[1], self.color[2]])
+        normals_1[1].extend([self.color[0], self.color[1], self.color[2]])
+        normals_2[0].extend([self.color[0], self.color[1], self.color[2]])
+        normals_2[1].extend([self.color[0], self.color[1], self.color[2]])
 
         # Create a list with the two endpoints
         vertices = [normals_1[0], normals_1[1], normals_2[0], normals_2[1]]
@@ -85,9 +92,6 @@ class Line(VObject):
         # Draw the Line
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, None)
         glBindVertexArray(0)
-
-    def createFunctionAnimation(self, func, lower_bound, upper_bound, steps, loop, draw=True):
-        return super().createFunctionAnimation(func, lower_bound, upper_bound, steps, loop, draw)
 
     def updatePosition(self, newPosition):
         return super().updatePosition(newPosition)
