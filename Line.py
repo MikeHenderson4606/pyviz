@@ -4,6 +4,7 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
+from objtypes import LinePosition
 from VObject import VObject
 
 class Line(VObject):
@@ -36,7 +37,7 @@ class Line(VObject):
         dz /= length
 
         # Introduce the thickness
-        offset_x = -dy * self.thickness / 2.0   # Scaled perpendicular vector
+        offset_x = (-dy + dz) * self.thickness / 2.0   # Scaled perpendicular vector
         offset_y = dx * self.thickness / 2.0    # Scaled perpendicular vector
         offset_z = dz * self.thickness / 2.0   # Scaled perpendicular vector
 
@@ -64,10 +65,12 @@ class Line(VObject):
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
         glBufferData(GL_ARRAY_BUFFER, flat_vertices.nbytes, flat_vertices, GL_DYNAMIC_DRAW)
 
-        # Specify indices
+        # Specify indices - draw both sides
         self.indices = np.array([
             0, 1, 2, # First triangle
-            2, 1, 3  # Second triangle
+            2, 1, 0, # Inverted first triangle
+            2, 1, 3, # Second triangle
+            3, 1, 2  # Inverted second triangle
         ], dtype=np.uint32)
         
         # Create an element buffer object (ebo)
@@ -90,11 +93,17 @@ class Line(VObject):
         glBufferSubData(GL_ARRAY_BUFFER, 0, flat_vertices.nbytes, flat_vertices)
 
         # Draw the Line
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, None)
+        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, None)
         glBindVertexArray(0)
 
-    def updatePosition(self, newPosition):
-        return super().updatePosition(newPosition)
+    def updatePosition(self):
+        return super().updatePosition()
+    
+    def animate(self, animateTo):
+        return super().animate(animateTo)
+    
+    def createAnimationPositions(self):
+        return super().createAnimationPositions()
 
     def destroy(self):
         # Destroy vao and vbo

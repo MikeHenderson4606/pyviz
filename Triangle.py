@@ -48,6 +48,12 @@ class Triangle(VObject):
 
     def updatePosition(self, newPosition):
         return super().updatePosition(newPosition)
+    
+    def animate(self, animateTo):
+        return super().animate(animateTo)
+    
+    def createAnimationPositions(self):
+        return super().createAnimationPositions()
 
     def destroy(self):
         # Destroy vao and vbo

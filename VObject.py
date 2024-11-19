@@ -10,11 +10,9 @@ class VObject(ABC):
 
     def __init__(self):
         self.animation_steps = []                   # Holds the vertex info for animation
-        self.currStep = 0                           # Keeps track of the current animation step
+        self.curr_step = 0                          # Keeps track of the current animation step
         self.steps = 0
         self.lines = []
-        self.doesAnimate = False
-        self.doneCycle = False
 
     @abstractmethod
     def createVertices(self):
@@ -29,5 +27,13 @@ class VObject(ABC):
         pass
     
     @abstractmethod
-    def updatePosition(self, newPosition):
+    def updatePosition(self):
+        pass
+
+    @abstractmethod
+    def animate(self, animateTo, func, steps):
+        pass
+
+    @abstractmethod
+    def createAnimationPositions(self):
         pass

@@ -4,6 +4,7 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
+from objtypes import CirclePosition
 from VObject import VObject
 
 class Circle(VObject):
@@ -81,9 +82,36 @@ class Circle(VObject):
             glDrawArrays(GL_TRIANGLE_FAN, 0, self.CIRCLE_QUALITY + 2)
         glBindVertexArray(0)
 
-    def updatePosition(self, newPosition):
-        self.center = newPosition
-        self.createVertices()
+    def updatePosition(self):
+        if (self.curr_step < len(self.animation_steps)):
+            self.center = np.array([self.animation_steps[self.curr_step][0], self.animation_steps[self.curr_step][1], 0.0], dtype=np.float32)
+            self.curr_step += 1
+            self.createVertices()
+
+    def animate(self, animateTo, func=None, steps=100):
+        self.anim_func = func
+        if (type(animateTo) == CirclePosition):
+            self.animationPosition = animateTo
+            self.createAnimationPositions(steps)
+        else:
+            raise Exception("Please input a valid coordinate to animate to.")
+
+    def createAnimationPositions(self, steps):
+        diff = self.animationPosition.center - self.center
+        anim_x_values = []
+        anim_y_values = []
+        if (self.anim_func):
+            x_values = np.arange(-10, 10, 20 / steps, dtype=np.float32)
+            for x_val in x_values:
+                anim_x_values.append(x_val)
+                anim_y_values.append(self.anim_func(x_val))
+        else:
+            # Animate linearly along the path
+            anim_x_values = np.arange(self.center, self.animationPosition + (diff[0] / steps), diff[0] / (steps - 1), dtype=np.float32)
+            anim_y_values = np.arange(self.center, self.animationPosition + (diff[1] / steps), diff[1] / (steps - 1), dtype=np.float32)
+    
+        for i in range(steps):
+            self.animation_steps.append([anim_x_values[i], anim_y_values[i], 0.0])
 
     def destroy(self):
         # Destroy vao and vbo
