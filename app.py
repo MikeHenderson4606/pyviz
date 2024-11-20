@@ -16,6 +16,7 @@ from Quad import Quad
 from Camera import Camera
 from VObject import VObject
 from utils import MathUtils
+from objtypes import Colors
 
 class App:
 
@@ -103,18 +104,18 @@ class App:
                     [x_val, adj_y, y_val + di,],
                     [x_val + di, adj_both, y_val + di],
                 ], dtype=np.float32)
-                quad = Quad(vertices=vertices)
+                quad = Quad(vertices=vertices, color=Colors.LIGHT_GREEN.value)
                 self.addObject(quad)
 
     def drawObjects(self):
         for obj in self.objects:
             obj.updatePosition()
             if (isinstance(obj, Quad)):
-                self.GLUtils.setTranslucentShader()
-                obj.draw()
+                # self.GLUtils.setTranslucentShader()
+                pass
             else:
                 self.GLUtils.setDefaultShader()
-                obj.draw()
+            obj.draw()
 
     def moveCamera(self, pos, focus, animate=False):
         if (animate):

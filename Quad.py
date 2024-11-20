@@ -15,8 +15,13 @@ class Quad(VObject):
 
         if (len(vertices) == 4):                # The starting position of the line (x, y, z) as a list
             self.vertices = []
+            normal = np.cross(vertices[1] - vertices[0], vertices[2] - vertices[1])
+            print(normal)
             for vertex in vertices:
-                self.vertices.append(np.append(vertex, np.array([color[0], color[1], color[2]], dtype=np.float32)))
+                self.vertices.append(np.append(vertex, np.array([
+                    normal[0], normal[1], normal[2],
+                    color[0], color[1], color[2]
+                    ], dtype=np.float32)))
 
             self.vertices = np.array(self.vertices, dtype=np.float32)
         else:
@@ -56,8 +61,12 @@ class Quad(VObject):
         # Tell OpenGL how to interpret the vertex/color data
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
+        # Introduce normals
         glEnableVertexAttribArray(1)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
+        # Color data
+        glEnableVertexAttribArray(2)
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(24))
     
     def draw(self):
         # Bind the vao
