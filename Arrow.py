@@ -6,6 +6,7 @@ from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 from VObject import VObject
 from objtypes import ArrowPosition
+from math import isnan
 
 class Arrow(VObject):
 
@@ -30,10 +31,10 @@ class Arrow(VObject):
         dy = self.end[1] - self.start[1]
         dz = self.end[2] - self.start[2]
         # Normalize to ensure unit length
-        length = np.sqrt(dx * dx + dy * dy + dz * dz)
-        dx /= length
-        dy /= length
-        dz /= length
+        length = np.sqrt((dx * dx) + (dy * dy) + (dz * dz))
+        dx = dx / length if (length != 0 and not isnan(length)) else 0
+        dy = dy / length if (length != 0 and not isnan(length)) else 0
+        dz = dz / length if (length != 0 and not isnan(length)) else 0
 
         # Introduce the thickness
         offset_x = (-dy + dz) * self.thickness / 2.0   # Scaled perpendicular vector
@@ -57,7 +58,7 @@ class Arrow(VObject):
         scale = 0.13
         diff = self.end - self.start
         length = np.linalg.norm(diff)
-        unit_vector = diff / length
+        unit_vector = diff / length if length != 0 else np.array([0, 0, 0], dtype=np.float32)
         perp_unit_vector = np.array([-unit_vector[1], unit_vector[0], 0.0], dtype=np.float32)
 
         head_points = np.array([(self.end + (perp_unit_vector * scale)) - (unit_vector * scale), (self.end - (perp_unit_vector * scale)) - (unit_vector * scale)], dtype=np.float32)

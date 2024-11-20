@@ -12,6 +12,7 @@ from Animations import Animations
 from Line import Line
 from Circle import Circle
 from Triangle import Triangle
+from Quad import Quad
 from Camera import Camera
 from VObject import VObject
 from utils import MathUtils
@@ -75,31 +76,45 @@ class App:
         for obj in objs:
             self.objects.remove(obj)
 
-    def createFunctionAnimation(self, obj, func, loop, draw=True):
-        self.animator.createFunctionAnimation(obj, func, loop, draw)
-
-    def animate(self, obj):
-        self.animator.animate(obj)
-
     def drawFunction(self, func, lower, upper, steps=100):
         di = (lower - upper) / steps
-        x_values = np.arange(lower, upper, step=di)
+        x_values = np.linspace(lower, upper, steps)
         for i in x_values:
             try:
                 line = Line([i, func(i), 0.0], [i + di, func(i + di), 0.0], color=(0, 0, 0), thickness=2, z_index = 1)
                 self.addObject(line)
             except:
-                # Ignore drawing any out of range x values
                 print("Out of range.")
                 pass
 
-    def animateFuncDrawing(self, obj, val, nextVal):
-        self.animator.animateFuncDrawing(obj, val, nextVal)
+    def draw3DFunction(self, func, lower, upper, steps=30):
+        di = (upper - lower) / (steps - 1)
+        x_values = np.linspace(lower, upper, steps)
+        y_values = np.linspace(lower, upper, steps)
+        for x_val in x_values:
+            for y_val in y_values:
+                value = func(x_val, y_val)                  # The function at the given index
+                adj_x = func(x_val + di, y_val)             # The function evaluated slightly more along the x axis
+                adj_y = func(x_val, y_val + di)             # The function evaluated slightly more along the y axis
+                adj_both = func(x_val + di, y_val + di)     # The function evaluated slightly more along both axes
+                vertices = np.array([
+                    [x_val, value, y_val],
+                    [x_val + di, adj_x, y_val],
+                    [x_val, adj_y, y_val + di,],
+                    [x_val + di, adj_both, y_val + di],
+                ], dtype=np.float32)
+                quad = Quad(vertices=vertices)
+                self.addObject(quad)
 
     def drawObjects(self):
         for obj in self.objects:
             obj.updatePosition()
-            obj.draw()
+            if (isinstance(obj, Quad)):
+                self.GLUtils.setTranslucentShader()
+                obj.draw()
+            else:
+                self.GLUtils.setDefaultShader()
+                obj.draw()
 
     def moveCamera(self, pos, focus, animate=False):
         if (animate):
@@ -110,7 +125,7 @@ class App:
 
     def animateCamera(self):
         if (self.camera.curr_step < len(self.camera.camera_animation)):
-            self.moveCamera(self.camera.camera_animation[self.camera.curr_step], self.camera.camera_focus)
+            self.camera.moveCamera(self.camera.camera_animation[self.camera.curr_step], self.camera.camera_focus)
             self.camera.incrementStep()
 
     def calculatePriorities(self):
@@ -148,14 +163,15 @@ class App:
                         self.camera.spinCamera(0, 10)
                     if (event.key == pg.K_DOWN):
                         self.camera.spinCamera(0, -10)
-                # Reinitialize matrices once a key press has happened
-                self.GLUtils.initMatrices()
 
             # Refresh the screen
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
             # Draw all objects
             self.drawObjects()
+
+            # Reinitialize matrices after all computation has been done
+            self.GLUtils.initMatrices()
 
             # Animate camera
             self.animateCamera()

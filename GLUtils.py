@@ -31,8 +31,14 @@ class GLUtils:
         # Initialize PyGame
         self.initPyGame(width, height)
 
+        # Create the default vao
+        self.default_vao = glGenVertexArrays(1)
+
         # Initializing OpenGL
         self.initOpenGL()
+
+        # Initialize Shaders
+        self.initShaders("./shaders/vert.txt", "./shaders/frag.txt")
 
         # Initialize MVP matrices
         self.initMatrices()
@@ -54,6 +60,10 @@ class GLUtils:
         glEnable(GL_MULTISAMPLE)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE)
+        # Enable blending for alpha values
+        glEnable(GL_BLEND)
+        # Use alpha as the blend function
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     def initOpenGL(self):
         glClearColor(0.3, 0.3, 0.3, 1)
@@ -78,11 +88,6 @@ class GLUtils:
         return lower_bound, upper_bound
 
     def initMatrices(self):
-        # Bind to a default VAO
-        self.default_vao = glGenVertexArrays(1)
-        glBindVertexArray(self.default_vao)
-        # Initialize Shaders
-        self.initShaders("./shaders/vert.txt", "./shaders/frag.txt")
         # Set up matrices
         self.initPerspective()
         self.initView()
@@ -90,8 +95,17 @@ class GLUtils:
         # Unbind the VAO
         glBindVertexArray(0)
 
+    def setTranslucentShader(self):
+        glUseProgram(self.translucent_shader)
+
+    def setDefaultShader(self):
+        glUseProgram(self.shader)
+
     def initShaders(self, vertFilePath, fragFilePath):
+        # Bind to a default vao
+        glBindVertexArray(self.default_vao)
         self.shader = self.createShader(vertFilePath, fragFilePath)
+        self.translucent_shader = self.createShader("./shaders/vert.txt", "./shaders/frag_translucent.txt")
         glUseProgram(self.shader)
 
     def createShader(self, vertFilePath, fragFilePath):

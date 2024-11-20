@@ -14,13 +14,22 @@ def trigFunc(x):
     return np.cos(x) * np.sin(x) / np.arctan(x)
 
 def logFunc(x):
-    return np.log2(x)
+    if (x > 0):
+        return np.log2(x)
+    else:
+        return -100
 
 def negLog(x):
-    return logFunc(-x)
+    if (x > 0):
+        return logFunc(-x)
+    else:
+        return -100
 
 def basicFunc(x):
     return x * x
+
+def test3D(x, y):
+    return x + y
 
 if __name__ == "__main__":
     width = 1200
@@ -28,16 +37,19 @@ if __name__ == "__main__":
 
     app = App(width, height)
 
-    arrowPositions = np.arange(0, (2 * np.pi) + (2 * np.pi / 10),  2 * np.pi / 10, dtype=np.float32)
-    for i in range(len(arrowPositions)):
-        for j in range(len(arrowPositions)):
-            arrow = Arrow([2 * np.sin(i) * np.cos(j), 2 * np.sin(i) * np.sin(j), 2 * np.cos(i)], [3 * np.sin(i) * np.cos(j), 3 * np.sin(i) * np.sin(j), 3 * np.cos(i)], color=Colors.LIGHT_BLUE.value)
-            app.addObject(arrow)
+    arrow = Arrow([0, 0, 0], [0, 0, 0], Colors.LIGHT_BLUE.value, z_index=25)
+    arrow2 = Arrow([0, 0, 0], [0, 0, 0], Colors.LIGHT_RED.value, z_index=25)
 
-    app.moveCamera([0, 0.5, 10], [0, 0, 0], animate=False)
+    arrow.animate(func=trigFunc, steps=500)
+    arrow2.animate(func=basicFunc, steps=500)
+    app.draw3DFunction(func=test3D, lower=-3, upper=3)
 
-    # app.addObject(arrow)
-    # app.addObject(arrow2)
+    app.moveCamera([-10, 3, 10], [0, 0, 0], animate=True)
+    app.moveCamera([-10, 3, -10], [0, 0, 0], animate=True)
+    app.moveCamera([10, 3, -10], [0, 0, 0], animate=True)
+    app.moveCamera([10, 3, 10], [0, 0, 0], animate=True)
 
-    # app.createAxes(hash_thickness=3)
+    app.createAxes(hash_thickness=3)
+    app.addObject(arrow)
+    app.addObject(arrow2)
     app.run()

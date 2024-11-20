@@ -12,7 +12,7 @@ class Camera():
         self.up = np.array([0.0, 1.0, 0.0], dtype=np.float32)  # 'Up' is along the positive y-axis
         self._camera_speed = 0.05
         self.camera_focus = np.array([0, 0, 0], dtype=np.float32)
-        self.camera_animation = [self.camera_eye]
+        self.camera_animation = []
         self.curr_step = 0
         self.max_steps = 0
         self.theta = 0
@@ -67,11 +67,11 @@ class Camera():
         deltay = focus[1] - pos[1]
         deltaz = -(focus[2] - pos[2])
 
-        self.theta = np.rad2deg(np.arctan(deltax / deltaz))
+        self.theta = np.rad2deg(np.arctan2(deltax, deltaz))
         h = np.sqrt(deltax**2 + deltaz**2)
-        self.phi = np.rad2deg(np.arctan(deltay / h))
+        self.phi = np.rad2deg(np.arctan2(deltay, h))
 
-        self.camera_animation = [self.camera_eye]
+        # self.camera_animation = [self.camera_eye]
         self.camera_focus = focus
 
         self.updateVectors()
@@ -87,7 +87,7 @@ class Camera():
         # The next value is going to be 1 / steps past the a value
         b = a + (1 / steps)
         # Find out the length of the vector
-        startPos = self.camera_animation[self.max_steps]
+        startPos = self.camera_animation[self.max_steps] if (len(self.camera_animation) > 0) else self.camera_eye
         diff = endPos - startPos
         xpositions = []
         ypositions = []
@@ -104,19 +104,19 @@ class Camera():
             startZ = startPos[2] + (diff[2] * i / steps)
             endZ = startPos[2] + (diff[2] * (i + 1) / steps)
 
-            xpos = [startX] * area if (diff[0] == 0 or area == 0) else (np.arange(startX, endX, (endX - startX) / area, dtype=np.float32))
-            ypos = [startY] * area if (diff[1] == 0 or area == 0) else (np.arange(startY, endY, (endY - startY) / area, dtype=np.float32))
-            zpos = [startZ] * area if (diff[2] == 0 or area == 0) else (np.arange(startZ, endZ, (endZ - startZ) / area, dtype=np.float32))
+            xpos = [startX] * area if (diff[0] == 0 or area == 0) else (np.linspace(startX, endX, area, dtype=np.float32))
+            ypos = [startY] * area if (diff[1] == 0 or area == 0) else (np.linspace(startY, endY, area, dtype=np.float32))
+            zpos = [startZ] * area if (diff[2] == 0 or area == 0) else (np.linspace(startZ, endZ, area, dtype=np.float32))
 
             xpositions.extend(xpos)
             ypositions.extend(ypos)
             zpositions.extend(zpos)
-
+        
         for i in range(len(xpositions)):
             self.camera_animation.append(np.array([
                 xpositions[i], ypositions[i], zpositions[i]
             ], dtype=np.float32))
-        self.max_steps += len(xpositions)
+        self.max_steps += len(xpositions) - 1
 
     def getViewMatrix(self):
         return self._lookAt()

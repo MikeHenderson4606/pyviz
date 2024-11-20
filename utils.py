@@ -13,7 +13,8 @@ class MathUtils:
             raise Exception("Please input valid RGB values.")
 
     def __gaussian(self, x):
-        return np.pow(np.e, -np.pow(x + 1, 2, dtype=np.float32), dtype=np.float32) + np.pow(np.e, -np.pow(x - 1, 2, dtype=np.float32), dtype=np.float32)
+        return (x * x) + 0.5
+        #return np.pow(np.e, -np.pow(x + 1, 2, dtype=np.float32), dtype=np.float32) + np.pow(np.e, -np.pow(x - 1, 2, dtype=np.float32), dtype=np.float32)
 
     def computeGaussianIntegral(self, lower, upper):
         lower_bound = self.__gaussian(lower)
