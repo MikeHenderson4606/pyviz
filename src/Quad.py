@@ -66,9 +66,6 @@ class Quad(VObject):
         # Color data
         glEnableVertexAttribArray(2)
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(24))
-    
-    def preDraw(self):
-        pass
 
     def draw(self):
         # Bind the vao

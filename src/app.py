@@ -23,6 +23,7 @@ class App:
     def __init__(self, width, height):
         # Instantiate Application
         self.objects = []
+        self.quads = []
         self.steps = 350
         self.clock = pg.time.Clock()
 
@@ -63,7 +64,10 @@ class App:
 
     def addObject(self, obj):
         if (isinstance(obj, VObject)):
-            self.objects.append(obj)
+            if (isinstance(obj, Quad)):
+                self.quads.append(obj)
+            else:
+                self.objects.append(obj)
             # Creating vertices
             obj.createVertices()
             # Instantiating objects
@@ -72,6 +76,8 @@ class App:
             # self._checkGLErrors()
             # Sort the object back into the list of objects
             self.calculatePriorities()
+        else:
+            raise Exception("Must input a valid VObject for the application.")
 
     def removeObjects(self, objs):
         for obj in objs:
@@ -88,7 +94,7 @@ class App:
                 print("Out of range.")
                 pass
 
-    def draw3DFunction(self, func, lower, upper, steps=30):
+    def draw3DFunction(self, func, lower, upper, steps=25):
         di = (upper - lower) / (steps - 1)
         x_values = np.linspace(lower, upper, steps)
         y_values = np.linspace(lower, upper, steps)
@@ -104,22 +110,27 @@ class App:
                     [x_val, adj_y, y_val + di,],
                     [x_val + di, adj_both, y_val + di],
                 ], dtype=np.float32)
-                quad = Quad(vertices=vertices, color=Colors.LIGHT_GREEN.value)
+                quad = Quad(vertices=vertices, color=Colors.MAGENTA.value)
                 self.addObject(quad)
 
     def drawObjects(self):
+        # Initialize all the quads at once, which are transparent and shaded
+        for quad in self.quads:
+            self.setShader(quad)
+            quad.draw()
+        self.GLUtils.initMatrices()
+        # Initialize all other objects which exist without the special shader
         for obj in self.objects:
+            # Set shader
+            self.setShader(obj)
             obj.updatePosition()
-            if (isinstance(obj, Quad)):
-                self.GLUtils.setTranslucentShader()
-                # Reinitialize matrices after all computation has been done
-                self.GLUtils.initViewPosition()
-                self.GLUtils.initMatrices()
-            else:
-                self.GLUtils.setDefaultShader()
-                self.GLUtils.initMatrices()
-            
             obj.draw()
+
+    def setShader(self, obj):
+        if (isinstance(obj, Quad)):
+            self.GLUtils.setTranslucentShader()
+        else:
+            self.GLUtils.setDefaultShader()
 
     def moveCamera(self, pos, focus, animate=False):
         if (animate):
@@ -132,6 +143,8 @@ class App:
         if (self.camera.curr_step < len(self.camera.camera_animation)):
             self.camera.moveCamera(self.camera.camera_animation[self.camera.curr_step], self.camera.camera_focus)
             self.camera.incrementStep()
+            # Reinitialize matrices after all computation has been done
+            self.GLUtils.initMatrices()
 
     def calculatePriorities(self):
         def z_indexSort(obj):
@@ -175,7 +188,7 @@ class App:
             # Draw all objects
             self.drawObjects()
 
-            # Reinitialize matrices after all computation has been done
+            # Initialize matrices
             self.GLUtils.initMatrices()
 
             # Animate camera

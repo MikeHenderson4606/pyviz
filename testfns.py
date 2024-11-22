@@ -26,8 +26,9 @@ def basicFunc(x):
     return x * x
 
 def test3D(x, y):
-    return 0
-    #return np.pow(np.e, -(x * x)) * np.pow(np.e, -(y * y))
+    #return 0
+    return np.pow(np.e, -(x * x)) * np.pow(np.e, -(y * y))
+    #return (x * x) + (y * y)
 
 if __name__ == "__main__":
     width = 1200

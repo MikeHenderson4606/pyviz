@@ -92,6 +92,11 @@ class GLUtils:
         self.initPerspective()
         self.initView()
         self.initModel()
+        try:
+            # Try to initialize view, if not ok
+            self.initViewPosition()
+        except:
+            pass
         # Unbind the VAO
         glBindVertexArray(0)
 
