@@ -1,6 +1,6 @@
 import numpy as np
 from enum import Enum
-from utils import MathUtils
+from src.utils import MathUtils
 
 class PositionTypes:
     def __init__(self):

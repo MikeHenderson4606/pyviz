@@ -2,7 +2,7 @@ from tracemalloc import start
 import numpy as np
 from pygame import init
 import pyrr
-from utils import MathUtils
+from src.utils import MathUtils
 
 class Camera():
 

@@ -1,14 +1,11 @@
-from hmac import new
-import Triangle
-from app import App
-from Circle import Circle
-from Triangle import Triangle
-from Line import Line
-from Arrow import Arrow
-from objtypes import *
-from objtypes import PositionTypes as pt
+from src.app import App
+from src.Circle import Circle
+from src.Triangle import Triangle
+from src.Line import Line
+from src.Arrow import Arrow
+from src.objtypes import *
+from src.objtypes import PositionTypes as pt
 import numpy as np
-import objtypes
 
 def trigFunc(x):
     return np.cos(x) * np.sin(x) / np.arctan(x)
@@ -29,7 +26,8 @@ def basicFunc(x):
     return x * x
 
 def test3D(x, y):
-    return np.pow(np.e, -(x * x)) * np.pow(np.e, -(y * y))
+    return 0
+    #return np.pow(np.e, -(x * x)) * np.pow(np.e, -(y * y))
 
 if __name__ == "__main__":
     width = 1200

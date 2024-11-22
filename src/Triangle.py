@@ -4,7 +4,7 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
-from VObject import VObject
+from src.VObject import VObject
 
 class Triangle(VObject):
 

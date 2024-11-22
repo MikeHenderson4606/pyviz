@@ -4,8 +4,8 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
-from objtypes import LinePosition
-from VObject import VObject
+from src.objtypes import LinePosition
+from src.VObject import VObject
 
 class Line(VObject):
 

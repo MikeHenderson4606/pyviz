@@ -7,16 +7,16 @@ from OpenGL.GLU import *
 from abc import ABC, abstractmethod
 import pyrr
 
-from GLUtils import GLUtils
-from Animations import Animations
-from Line import Line
-from Circle import Circle
-from Triangle import Triangle
-from Quad import Quad
-from Camera import Camera
-from VObject import VObject
-from utils import MathUtils
-from objtypes import Colors
+from src.GLUtils import GLUtils
+from src.Animations import Animations
+from src.Line import Line
+from src.Circle import Circle
+from src.Triangle import Triangle
+from src.Quad import Quad
+from src.Camera import Camera
+from src.VObject import VObject
+from src.utils import MathUtils
+from src.objtypes import Colors
 
 class App:
 
@@ -111,10 +111,14 @@ class App:
         for obj in self.objects:
             obj.updatePosition()
             if (isinstance(obj, Quad)):
-                # self.GLUtils.setTranslucentShader()
-                pass
+                self.GLUtils.setTranslucentShader()
+                # Reinitialize matrices after all computation has been done
+                self.GLUtils.initViewPosition()
+                self.GLUtils.initMatrices()
             else:
                 self.GLUtils.setDefaultShader()
+                self.GLUtils.initMatrices()
+            
             obj.draw()
 
     def moveCamera(self, pos, focus, animate=False):

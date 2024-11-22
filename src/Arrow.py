@@ -4,8 +4,8 @@ import numpy as np
 import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
-from VObject import VObject
-from objtypes import ArrowPosition
+from src.VObject import VObject
+from src.objtypes import ArrowPosition
 from math import isnan
 
 class Arrow(VObject):

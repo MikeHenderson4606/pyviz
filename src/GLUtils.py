@@ -38,7 +38,7 @@ class GLUtils:
         self.initOpenGL()
 
         # Initialize Shaders
-        self.initShaders("./shaders/vert.txt", "./shaders/frag.txt")
+        self.initShaders("./src/shaders/vert.txt", "./src/shaders/frag.txt")
 
         # Initialize MVP matrices
         self.initMatrices()
@@ -105,8 +105,8 @@ class GLUtils:
         # Bind to a default vao
         glBindVertexArray(self.default_vao)
         self.shader = self.createShader(vertFilePath, fragFilePath)
-        self.translucent_shader = self.createShader("./shaders/vert.txt", "./shaders/frag_translucent.txt")
-        glUseProgram(self.shader)
+        self.translucent_shader = self.createShader("./src/shaders/vert_shaded.txt", "./src/shaders/frag_translucent.txt")
+        self.setDefaultShader()
 
     def createShader(self, vertFilePath, fragFilePath):
         with open(vertFilePath, 'r') as f:
@@ -168,6 +168,15 @@ class GLUtils:
         else:
             print("Something went wrong assigning uniform variable: model.")
     
+    def initViewPosition(self):
+        self.viewPos = self.camera.camera_eye
+
+        viewPosition = glGetUniformLocation(self.translucent_shader, 'viewPos')
+        if (viewPosition >= 0):
+            glUniform3fv(viewPosition, 1, self.viewPos)
+        else:
+            print("Something went wrong assigning uniform variable: viewPos.")
+
     def quit(self, objects):
         if (len(objects) > 0):
             glDeleteProgram(self.shader)

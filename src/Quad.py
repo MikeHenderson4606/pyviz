@@ -5,8 +5,8 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
-from objtypes import LinePosition
-from VObject import VObject
+from src.objtypes import LinePosition
+from src.VObject import VObject
 
 class Quad(VObject):
 
@@ -16,7 +16,6 @@ class Quad(VObject):
         if (len(vertices) == 4):                # The starting position of the line (x, y, z) as a list
             self.vertices = []
             normal = np.cross(vertices[1] - vertices[0], vertices[2] - vertices[1])
-            print(normal)
             for vertex in vertices:
                 self.vertices.append(np.append(vertex, np.array([
                     normal[0], normal[1], normal[2],
@@ -60,14 +59,17 @@ class Quad(VObject):
 
         # Tell OpenGL how to interpret the vertex/color data
         glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(0))
         # Introduce normals
         glEnableVertexAttribArray(1)
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(12))
         # Color data
         glEnableVertexAttribArray(2)
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(24))
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(24))
     
+    def preDraw(self):
+        pass
+
     def draw(self):
         # Bind the vao
         glBindVertexArray(self.vao)

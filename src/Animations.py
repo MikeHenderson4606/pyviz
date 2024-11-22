@@ -1,6 +1,6 @@
 
 import numpy as np
-from Line import Line
+from src.Line import Line
 
 class Animations:
 

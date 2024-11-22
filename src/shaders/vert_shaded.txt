@@ -17,7 +17,7 @@ void main() {
 
     gl_Position = pos;
 
-    Normal = aNormal;
-    fragmentPosition = vec3(model * vec4(aPos, 1.0));
+    Normal = mat3(transpose(inverse(model))) * aNormal;  
+    fragmentPosition = vec3(model * vec4(vertexPos, 1.0));
     fragmentColor = vertexColor;
 }

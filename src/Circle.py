@@ -4,8 +4,8 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
-from objtypes import CirclePosition
-from VObject import VObject
+from src.objtypes import CirclePosition
+from src.VObject import VObject
 
 class Circle(VObject):
 
