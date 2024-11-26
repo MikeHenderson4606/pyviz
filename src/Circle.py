@@ -9,13 +9,13 @@ from src.VObject import VObject
 
 class Circle(VObject):
 
-    def __init__(self, radius, hollow, z_index = 0, center = (0.0, 0.0, 0.0)):
+    def __init__(self, radius, hollow=False, z_index = 0, center = (0.0, 0.0, 0.0)):
         super().__init__()
 
         SCALING_FACTOR = 1 / 10
         self.center = center                        # The center of the circle (x, y, z)
         self.radius = radius / 10                   # Radius of circle
-        self.CIRCLE_QUALITY = 500                   # int(500 * SCALING_FACTOR) # How many points the circle has
+        self.CIRCLE_QUALITY = 25                   # int(500 * SCALING_FACTOR) # How many points the circle has
         self.hollow = hollow                        # If the circle is hollow or not
         self.z_index = z_index
 
@@ -82,7 +82,10 @@ class Circle(VObject):
             glDrawArrays(GL_TRIANGLE_FAN, 0, self.CIRCLE_QUALITY + 2)
         glBindVertexArray(0)
 
-    def updatePosition(self):
+    def updatePosition(self, newPosition=None):
+        if (isinstance(newPosition, CirclePosition)):
+            self.center = newPosition.center
+            self.createVertices()
         if (self.curr_step < len(self.animation_steps)):
             self.center = np.array([self.animation_steps[self.curr_step][0], self.animation_steps[self.curr_step][1], 0.0], dtype=np.float32)
             self.curr_step += 1

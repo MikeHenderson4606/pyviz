@@ -40,9 +40,6 @@ class GLUtils:
         # Initialize Shaders
         self.initShaders("./src/shaders/vert.txt", "./src/shaders/frag.txt")
 
-        # Initialize MVP matrices
-        self.initMatrices()
-
     def initPyGame(self, width, height):
         pg.init()
 
@@ -130,16 +127,6 @@ class GLUtils:
             print(f'Shader compilation error: {e}')
             return None
 
-    def initPerspective(self):
-        # Set up perspective projection
-        self.projection_matrix = self.__generatePerspectiveMatrix(45, 0.1, 50.0)
-
-        projection_location = glGetUniformLocation(self.shader, 'projection')
-        if (projection_location >= 0):
-            glUniformMatrix4fv(projection_location, 1, GL_FALSE, self.projection_matrix)
-        else:
-            print("Something went wrong assigning uniform variable: projection.")
-
     def __generatePerspectiveMatrix(self, fov, near, far):
         perspective_matrix = pyrr.matrix44.create_perspective_projection_matrix(
             fov, 
@@ -151,6 +138,16 @@ class GLUtils:
 
         return perspective_matrix
     
+    def initPerspective(self):
+        # Set up perspective projection
+        self.projection_matrix = self.__generatePerspectiveMatrix(45, 0.1, 50.0)
+
+        projection_location = glGetUniformLocation(self.shader, 'projection')
+        if (projection_location >= 0):
+            glUniformMatrix4fv(projection_location, 1, GL_FALSE, self.projection_matrix)
+        else:
+            print("Something went wrong assigning uniform variable: projection.")
+
     def initView(self):
         # Generate view matrix
         self.view_matrix = self.camera.getViewMatrix()

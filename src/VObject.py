@@ -27,7 +27,7 @@ class VObject(ABC):
         pass
     
     @abstractmethod
-    def updatePosition(self):
+    def updatePosition(self, newPosition):
         pass
 
     @abstractmethod

@@ -46,5 +46,7 @@ class Colors(Enum):
     PINK =          MathUtils.createColor(240, 46, 172)
     TEAL =          MathUtils.createColor(64, 202, 207)
     YELLOW =        MathUtils.createColor(227, 222, 64)
+    WHITE =         MathUtils.createColor(255, 255, 255)
+    BLACK =         MathUtils.createColor(0, 0, 0)
 
     

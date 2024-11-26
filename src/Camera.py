@@ -8,7 +8,6 @@ class Camera():
 
     def __init__(self):
         self.camera_eye = np.array([0.0, 0.0, 10.0], dtype=np.float32)  # Camera is some units back along the z-axis
-        self.camera_forwards = np.array([0.0, 0.0, -1.0], dtype=np.float32) # Looking down the z axis
         self.up = np.array([0.0, 1.0, 0.0], dtype=np.float32)  # 'Up' is along the positive y-axis
         self._camera_speed = 0.05
         self.camera_focus = np.array([0, 0, 0], dtype=np.float32)
@@ -71,7 +70,6 @@ class Camera():
         h = np.sqrt(deltax**2 + deltaz**2)
         self.phi = np.rad2deg(np.arctan2(deltay, h))
 
-        # self.camera_animation = [self.camera_eye]
         self.camera_focus = focus
 
         self.updateVectors()

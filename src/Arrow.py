@@ -6,11 +6,12 @@ from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 from src.VObject import VObject
 from src.objtypes import ArrowPosition
+from src.objtypes import Colors
 from math import isnan
 
 class Arrow(VObject):
 
-    def __init__(self, start, end, color, thickness=5.0, z_index=0):
+    def __init__(self, start=np.array([0.0, 0.0, 0.0]), end=([0.0, 1.0, 0.0]), color=Colors.LIGHT_BLUE.value, thickness=5.0, z_index=0):
         super().__init__()
         if (len(start) == 3):
             self.start = np.array(start, dtype=np.float32)      # The starting position of the line (x, y, z) as a list
@@ -119,7 +120,10 @@ class Arrow(VObject):
         glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, None)
         glBindVertexArray(0)
     
-    def updatePosition(self):
+    def updatePosition(self, newPosition=None):
+        if (isinstance(newPosition, ArrowPosition)):
+            self.start = newPosition.start
+            self.end = newPosition.end
         # Iterate through animation positions
         if (self.curr_step < len(self.animation_steps)):
             self.start = np.array(self.animation_steps[self.curr_step][0], dtype=np.float32)

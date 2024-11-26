@@ -1,4 +1,3 @@
-from email.policy import default
 from OpenGL.GL import *
 import numpy as np
 import ctypes
@@ -15,10 +14,11 @@ class Quad(VObject):
 
         if (len(vertices) == 4):                # The starting position of the line (x, y, z) as a list
             self.vertices = []
-            normal = np.cross(vertices[1] - vertices[0], vertices[2] - vertices[1])
+            normal = np.cross(vertices[1] - vertices[0], vertices[2] - vertices[0]) * -1
+            unit_normal = normal / np.linalg.norm(normal)
             for vertex in vertices:
                 self.vertices.append(np.append(vertex, np.array([
-                    normal[0], normal[1], normal[2],
+                    unit_normal[0], unit_normal[1], unit_normal[2],
                     color[0], color[1], color[2]
                     ], dtype=np.float32)))
 
@@ -86,8 +86,8 @@ class Quad(VObject):
     def animate(self, animateTo):
         return super().animate(animateTo)
     
-    def createAnimationPositions(self):
-        return super().createAnimationPositions()
+    def createAnimationPositions(self, newPosition):
+        return super().createAnimationPositions(newPosition)
 
     def destroy(self):
         # Destroy vao and vbo

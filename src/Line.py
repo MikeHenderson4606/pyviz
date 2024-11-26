@@ -96,8 +96,8 @@ class Line(VObject):
         glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, None)
         glBindVertexArray(0)
 
-    def updatePosition(self):
-        return super().updatePosition()
+    def updatePosition(self, newPosition=None):
+        return super().updatePosition(newPosition)
     
     def animate(self, animateTo):
         return super().animate(animateTo)

@@ -2,7 +2,6 @@ import numpy as np
 
 
 class MathUtils:
-
     def __init__(self):
         pass
 
@@ -11,6 +10,9 @@ class MathUtils:
             return [r / 255, g / 255, b / 255]
         else:
             raise Exception("Please input valid RGB values.")
+
+    def Down():
+        return np.array([0, -1.0, 0], dtype=np.float32)
 
     def __gaussian(self, x):
         return (x * x) + 0.5
