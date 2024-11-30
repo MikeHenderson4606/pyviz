@@ -153,11 +153,6 @@ class App:
             sim.Update()
 
     def drawObjects(self):
-        # Initialize all the quads at once, which are transparent and shaded
-        for quad in self.quads:
-            self.setShader(quad)
-            quad.draw()
-        self.GLUtils.initMatrices()
         # Initialize all other objects which exist without the special shader
         for obj in self.objects:
             # Set shader
@@ -170,6 +165,11 @@ class App:
             else:
                 obj.draw()
         # Initialize matrices
+        self.GLUtils.initMatrices()
+        # Initialize all the quads at once, which are transparent and shaded
+        for quad in self.quads:
+            self.setShader(quad)
+            quad.draw()
         self.GLUtils.initMatrices()
 
     def setShader(self, obj):

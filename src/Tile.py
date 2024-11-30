@@ -4,33 +4,29 @@ import ctypes
 from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.GLU import *
 
-from src.objtypes import LinePosition
 from src.VObject import VObject
 
-class Quad(VObject):
-
+class Tile(VObject):
+    
     def __init__(self, vertices, z_index = 0, thickness = 1.0, color = (1.0, 1.0, 1.0)):
         super().__init__()
-        if (len(vertices) == 4 and type(vertices) == np.ndarray):                # The starting position of the line (x, y, z) as a list
-            self.vertices = []
-            normal = np.cross(vertices[1] - vertices[0], vertices[2] - vertices[0]) * -1
-            unit_normal = normal / np.linalg.norm(normal)
-            for vertex in vertices:
-                self.vertices.append(np.append(vertex, np.array([
-                    unit_normal[0], unit_normal[1], unit_normal[2],
-                    color[0], color[1], color[2]
-                    ], dtype=np.float32)))
-
-            self.vertices = np.array(self.vertices, dtype=np.float32)
-        else:
-            raise Exception("Vertices must include an array of length 4 with each element having length 3.")
-        
+        self.vertices = vertices
         self.thickness = thickness / 100            # Thickness of the line -- OpenGL depreciated line thickness past 1.0, so need to create a quad to visualize thicker lines
         self.color = color                          # Color
         self.z_index = z_index
 
+        if (len(vertices) == 4 and type(vertices) == np.ndarray):                # The starting position of the line (x, y, z) as a list
+            self.createVertices()
+        else:
+            raise Exception("Vertices must include an array of length 4 with each element having length 3.")
+
     def createVertices(self):
-        pass
+        vertices = []
+        for vertex in self.vertices:
+            curr_vertex = [vertex[0], vertex[1], vertex[2], self.color[0], self.color[1], self.color[2]]
+            vertices.append(curr_vertex)
+        
+        self.vertices = np.array(vertices, dtype=np.float32)
         
     def instantiateGLObjects(self):
         # Create a vertex array object (vao)
@@ -58,13 +54,10 @@ class Quad(VObject):
 
         # Tell OpenGL how to interpret the vertex/color data
         glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(0))
-        # Introduce normals
-        glEnableVertexAttribArray(1)
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(12))
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
         # Color data
-        glEnableVertexAttribArray(2)
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 36, ctypes.c_void_p(24))
+        glEnableVertexAttribArray(1)
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
 
     def draw(self):
         # Bind the vao
@@ -79,9 +72,13 @@ class Quad(VObject):
         # Unbind VAO
         glBindVertexArray(0)
         
-    def updatePosition(self):
-        return super().updatePosition()
+    def updatePosition(self, newPosition=None):
+        return super().updatePosition(newPosition)
     
+    def updateColor(self, newColor):
+        self.color = newColor
+        self.createVertices()
+
     def animate(self, animateTo):
         return super().animate(animateTo)
     
