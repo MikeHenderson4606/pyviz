@@ -79,7 +79,7 @@ if __name__ == "__main__":
     height = 720
 
     app = App(width, height)
-    sim = FluidSimulation(width=4.0, height=2.4, smoothing_dist=0.4, mu=0.5, show_background=False, show_particles=True)
+    sim = FluidSimulation(width=2.4, height=2.4, smoothing_dist=0.4, mu=0.5, show_background=False, show_particles=True)
     # app.draw3DFunction(func=test3D, lower=-3.0, upper=3.0)
 
     # app.moveCamera([0, 3, 10], [0, 0, 0])

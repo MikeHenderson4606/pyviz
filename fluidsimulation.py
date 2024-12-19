@@ -131,7 +131,7 @@ class FluidSimulation(Simulation):
         result = (2 * self.width / self.smoothingDistance) * (2 * self.height / self.smoothingDistance)
         grid_range = round(result)
         self.grid: List[Cell] = []
-        print(len(cols), len(rows))
+        print(grid_range)
         for i in range(grid_range):
             x_val = self.smoothingDistance * (i % len(cols))
             y_val = (2 * self.height) - (self.smoothingDistance * int(i / len(rows)))
@@ -155,14 +155,14 @@ class FluidSimulation(Simulation):
 
     def calculatePosition(self, particle):
         if (isinstance(particle, Particle)):
-            rows = int(2 * self.height / self.smoothingDistance)
+            rows = round(2 * self.height / self.smoothingDistance)
             position = particle.position + np.array([self.width, self.height, 0], dtype=np.float32)
 
-            col = int(position[0] / self.smoothingDistance)
-            row = rows - int(position[1] / self.smoothingDistance) - 1
+            col = round(position[0] / self.smoothingDistance)
+            row = rows - round(position[1] / self.smoothingDistance) - 1
 
-            if (col == int(2 * self.width / self.smoothingDistance)):
-                col = int(2 * self.width / self.smoothingDistance) - 1
+            if (col == round(2 * self.width / self.smoothingDistance)):
+                col = round(2 * self.width / self.smoothingDistance) - 1
 
             return col + (rows * row)
 
@@ -215,8 +215,8 @@ class FluidSimulation(Simulation):
 
     def createCellsToCheck(self, curr_cell_index):
         this_cell = self.grid[curr_cell_index]
-        rows = int((2 * self.height) / self.smoothingDistance)
-        cols = int((2 * self.width) / self.smoothingDistance)
+        rows = round((2 * self.height) / self.smoothingDistance)
+        cols = round((2 * self.width) / self.smoothingDistance)
 
         # Get all relevant cells - check width
         if (curr_cell_index % cols == 0):
@@ -233,14 +233,14 @@ class FluidSimulation(Simulation):
             # Bottom wall
             bottom_left_cell = bottom_middle_cell = bottom_right_cell = None
 
-        top_left_cell = self.grid[int(curr_cell_index - cols - 1)] if not ('top_left_cell' in locals()) else None
-        top_middle_cell = self.grid[int(curr_cell_index - cols)] if not ('top_middle_cell' in locals()) else None
-        top_right_cell = self.grid[int(curr_cell_index - cols + 1)] if not ('top_right_cell' in locals()) else None
-        left_cell = self.grid[int(curr_cell_index - 1)] if not ('left_cell' in locals()) else None
-        right_cell = self.grid[int(curr_cell_index + 1)] if not ('right_cell' in locals()) else None
-        bottom_left_cell = self.grid[int(curr_cell_index + cols - 1)] if not ('bottom_left_cell' in locals()) else None
-        bottom_middle_cell = self.grid[int(curr_cell_index + cols)] if not ('bottom_middle_cell' in locals()) else None
-        bottom_right_cell = self.grid[int(curr_cell_index + cols + 1)] if not ('bottom_right_cell' in locals()) else None
+        top_left_cell = self.grid[round(curr_cell_index - cols - 1)] if not ('top_left_cell' in locals()) else None
+        top_middle_cell = self.grid[round(curr_cell_index - cols)] if not ('top_middle_cell' in locals()) else None
+        top_right_cell = self.grid[round(curr_cell_index - cols + 1)] if not ('top_right_cell' in locals()) else None
+        left_cell = self.grid[round(curr_cell_index - 1)] if not ('left_cell' in locals()) else None
+        right_cell = self.grid[round(curr_cell_index + 1)] if not ('right_cell' in locals()) else None
+        bottom_left_cell = self.grid[round(curr_cell_index + cols - 1)] if not ('bottom_left_cell' in locals()) else None
+        bottom_middle_cell = self.grid[round(curr_cell_index + cols)] if not ('bottom_middle_cell' in locals()) else None
+        bottom_right_cell = self.grid[round(curr_cell_index + cols + 1)] if not ('bottom_right_cell' in locals()) else None
 
         # Put them all in an array
         cells_to_check = [top_left_cell, 
